@@ -129,16 +129,16 @@ initBank()
     while(!fileExists(path))
     {
         writeFile(path, "");
-        print("trying to write bank file!");
+        printf("trying to write bank file!");
         wait 0.5;
     }
-    print("bank file successfully wrote!");
+    printf("bank file successfully wrote!");
 
     // Open the file we just created and initialise it with 0.
     file = fopen(path, "a");
     fwrite(file, "0");
     fclose(file);
-    print("bank file initialised.");
+    printf("bank file initialised.");
 
     // Set the player's bank to 0;
     self.pers["bank"] = 0;  
