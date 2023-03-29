@@ -25,7 +25,7 @@ rankup(levels)
     newRank = self.pers["rank"] + 1;
     updateRankData(newRank);
 
-    self tell("^6You^7 are now ^2Rank " + newRank + "^7 (Fee:^1 " + rankupFee + "^7)");
+    self iPrintLn("^6You^7 are now ^2Rank " + newRank + "^7 (Fee:^1 " + rankupFee + "^7)");
 }
 
 rankupCommand(args)
@@ -51,7 +51,7 @@ rankupCommand(args)
 
 rank()
 {
-    self tell("^6You^7 are ^2Rank " + self.pers["rank"] + "^7.");
+    self iPrintLn("^6You^7 are ^2Rank " + self.pers["rank"] + "^7.");
 }
 
 rankCommand(args)

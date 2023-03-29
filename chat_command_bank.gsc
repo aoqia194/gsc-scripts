@@ -25,7 +25,7 @@ depositBank(points)
     self.score -= points;
     self updateBankData((self.pers["bank"] + points));
 
-    self tell("^6" + self.name + "^7 has deposited ^2$" + points);
+    self iPrintLn("^6" + self.name + "^7 has deposited ^2$" + points);
 }
 
 depositBankCommand(args)
@@ -55,12 +55,12 @@ withdrawBank(points)
     }
     if (self.pers["bank"] < points)
     {
-        self tell("You don't have enough points!");
+        self iPrintLn("You don't have enough points!");
         return;
     }
     if ((self.score + points) > 1000000)
     {
-        self tell("Your score has already reached maximum!");
+        self iPrintLn("Your score has already reached maximum!");
         return;
     }
 
@@ -69,7 +69,7 @@ withdrawBank(points)
     self.score += (points - bank_fee);
     self updateBankData((self.pers["bank"] - points));
 
-    self tell("^6" + self.name + "^7 has withdrawn ^2$" + points + "^7 (Fee: ^1$" + bank_fee + "^7)");
+    self iPrintLn("^6" + self.name + "^7 has withdrawn ^2$" + points + "^7 (Fee: ^1$" + bank_fee + "^7)");
 }
 
 withdrawBankCommand(args)
@@ -92,7 +92,7 @@ withdrawBankCommand(args)
 
 balanceBank()
 {
-    self tell("^6" + self.name + "^7 has ^2$" + self.pers["bank"] + "^7 in their bank.");
+    self iPrintLn("^6" + self.name + "^7 has ^2$" + self.pers["bank"] + "^7 in their bank.");
 }
 
 balanceBankCommand(args)
