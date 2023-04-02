@@ -7,6 +7,11 @@
 #include scripts\zm\lattemango_chatcommands\util\_error;
 #include scripts\zm\lattemango_chatcommands\util\_tostring;
 
+// Used with set_map_stat(), get_map_stat()
+#include maps\mp\zombies\_zm_stats;
+// Used with do_player_general_vox()
+#include maps\mp\zombies\_zm_utility;
+
 rankup(levels)
 {
     if (levels <= 0)
@@ -20,9 +25,12 @@ rankup(levels)
     // Making sure the player has the money either in the bank or in their score.
     if (self.pers["account_bank"] < rankupFee && self.score < rankupFee)
     {
+        self thread do_player_general_vox("general", "exert_sigh", 10, 50);
         self tell("You don't have enough points! ^2Rank " + (self.pers["account_rank"] + levels) + "^7 requires ^1" + rankupFee + "^7 points!");
         return;
     }
+
+    self playsoundtoplayer("zmb_vault_bank_withdraw", self);
 
     // If the player has the points to rankup, then use those, otherwise use the bank.
     if (self.score >= rankupFee)
@@ -32,8 +40,9 @@ rankup(levels)
     else if (self.pers["account_bank"] >= rankupFee)
     {
         self.pers["account_bank"] -= rankupFee;
-
-        self database_update_playerdata();
+        self.account_value = (self.pers["account_bank"] / 1000);
+        // Set the player's physical bank stats to the chat bank.
+        self set_map_stat("depositBox", self.account_value);
     }
     else
     {
@@ -74,8 +83,6 @@ rankupCommand(args)
 
 rank()
 {
-    self tell("rank test tell");
-    self tell("is account_rank defined? " + isdefined(self.pers["account_rank"]));
     self tell("^6You^7 are ^2Rank " + self.pers["account_rank"] + "^7.");
 }
 
