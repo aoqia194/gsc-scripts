@@ -1,0 +1,4 @@
+tostring(value)
+{
+    return (value + "");
+}
