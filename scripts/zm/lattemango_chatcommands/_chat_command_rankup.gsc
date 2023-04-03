@@ -26,7 +26,7 @@ rankup(levels)
     if (self.pers["account_bank"] < rankupFee && self.score < rankupFee)
     {
         self thread do_player_general_vox("general", "exert_sigh", 10, 50);
-        self tell("You don't have enough points! ^2Rank " + (self.pers["account_rank"] + levels) + "^7 requires ^1" + rankupFee + "^7 points!");
+        self tell("^1You don't have enough points! ^2Rank " + (self.pers["account_rank"] + levels) + "^7 requires ^1" + rankupFee + "^7 points!");
         return;
     }
 
