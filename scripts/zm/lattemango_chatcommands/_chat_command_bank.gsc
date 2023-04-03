@@ -29,7 +29,7 @@ deposit_bank(points)
     if (self.score < points)
     {
         self thread do_player_general_vox("general", "exert_sigh", 10, 50);
-        self tell("You don't have enough points!");
+        self tell("^1You don't have enough points!");
         return;
     }
     /*if ((self.pers["account_bank"] + points) == 1000000)
@@ -91,7 +91,7 @@ withdraw_bank(points)
     if (self.pers["account_bank"] < points)
     {
         self thread do_player_general_vox("general", "exert_sigh", 10, 50);
-        self tell("You don't have enough points!");
+        self tell("^1You don't have enough points!");
         return;
     }
     if ((self.score + points) > 1000000)
