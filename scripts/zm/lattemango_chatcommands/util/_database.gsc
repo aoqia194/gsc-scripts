@@ -5,6 +5,8 @@
 
 create_default_json(guid)
 {
+    guid = tostring(guid);
+
     default_json = [];
     default_json["players"][tostring(guid)]["account_bank"] = 0;
     default_json["players"][tostring(guid)]["account_rank"] = 1;
@@ -60,16 +62,14 @@ database_initialise_player()
 
     if (!isdefined(player_data))
     {
-        guid = self getguid();
+        guid = tostring(self getguid());
         database = database_get();
 
-        default_json = create_default_json(guid);
-        database["players"][tostring(guid)] = default_json["players"][tostring(guid)];
+        database["players"][guid] = create_default_json(guid)["players"][guid];
         database_update(database);
-
+        player_data = database["players"][guid];
+        
         debug_print("^2Created new playerdata!");
-
-        player_data = database;
     }
 
     self.pers["account_bank"] = player_data["account_bank"];
@@ -128,5 +128,5 @@ init()
     printf("Executed \'scripts/zm/lattemango_chatcommands/util/_database::init\'");
     level.server_data["path"] = "server_data/database.json";
     database_initialise();
-    thread on_player_connected();
+    level thread on_player_connected();
 }
