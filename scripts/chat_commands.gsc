@@ -339,6 +339,7 @@ OnPlayerConnect()
 
 /* Error functions section */
 
+/*
 CommandDoesNotExistError(commandName)
 {
     return array("The command " + commandName + " doesn't exist", "Type " + GetDvar("cc_prefix") + "commands to get a list of commands");
@@ -383,8 +384,15 @@ InvalidRoundError(roundNumber)
 {
     return array(roundNumber + " is not a valid round number");
 }
-
-
+*/
+CommandDoesNotExistError(commandName) { return; }
+CommandHelpDoesNotExistError(commandName) { return; }
+InsufficientPermissionError(playerPermissionLevel, commandName, requiredPermissionLevel) { return; }
+InvalidPermissionLevelError(requestedPermissionLevel) { return; }
+NotEnoughArgsError(minimumArgs) { return; }
+PlayerDoesNotExistError(playerName) { return; }
+DvarDoesNotExistError(dvarName) { return; }
+InvalidRoundError(roundNumber) { return; }
 
 /* Utils section */
 

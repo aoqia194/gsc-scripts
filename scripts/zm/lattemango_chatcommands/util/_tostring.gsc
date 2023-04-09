@@ -1,4 +1,0 @@
-tostring(value)
-{
-    return (value + "");
-}
