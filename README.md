@@ -2,7 +2,7 @@
 Hello, world! I've decided to learn the GSC language for **T6**. So far, I've written a couple features; of which you will see down below in [Features](https://github.com/lattemango/gsc-scripts#features). I hope you have fun using and modifying my scripts (as you can under the [License](https://github.com/lattemango/gsc-scripts/blob/main/LICENSE)! If you have any issues or concerns using my scripts, please let me know in the [Issues](https://github.com/lattemango/gsc-scripts/issues) section!
 
 ## Features
-Down below I have the features I've currently developed. Watch the commits for more, if I find myself adding more.
+Down below I have the features I've currently developed.
  - [x] Chat Commands
  - [x] Database System (JSON)
  - [x] Banking System (utilising the database)
@@ -33,3 +33,10 @@ You might not have some files or folders like mine, but all that matters is you 
 #### Customise
 I've tried to make this easy for people who want to edit my GSC scripts to support their own embed styles and such. So I made some helper functions and some classes that you can use to customise your POST request's JSON data without having to actually modify the JSON data yourself (which is a big pain).
 If you have a look inside [webhook_data.gsc](https://github.com/lattemango/gsc-scripts/blob/main/scripts/zm/lattemango/features/discord_webhook/webhook_data.gsc), you will be able to see how I send the requests, and how I integrate my helper functions, which ultimately get called from [chat_listener.gsc](https://github.com/lattemango/gsc-scripts/blob/main/scripts/zm/lattemango/features/discord_webhook/chat_listener.gsc).
+
+## Roadmap
+Here are some things on my to-do list that you might just see in the future!
+- [ ] Database writes only happen at the end of a match.
+This can be achieved by possibly caching the database in `level.server_data` and accessing it from there. When the game ends, just write the cached database to the file.
+- [ ] Prevent issues with multi-server instances.
+I'm not quite sure if this will be a problem in the future. I don't have access to my own server hosting nor am I able to host multiple servers locally. This will unfortunately have to come down to issue reports if the time comes.
