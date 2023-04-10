@@ -3,11 +3,11 @@ Hello, world! I've decided to learn the GSC language for **T6**. So far, I've wr
 
 ## Features
 Down below I have the features I've currently developed. Watch the commits for more, if I find myself adding more.
- - [ ] Chat Commands
- - [ ] Database System (JSON)
- - [ ] Banking System (utilising the database)
- - [ ] Rankup System (utilising the database)
- - [ ] Discord Webhook Support
- - [ ] HTTP POST Request Support (utilising my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/))
+ - [x] Chat Commands
+ - [x] Database System (JSON)
+ - [x] Banking System (utilising the database)
+ - [x] Rankup System (utilising the database)
+ - [x] Discord Webhook Support
+ - [x] HTTP POST Request Support (utilising my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/))
 
 More to come soon (if people want it)!
