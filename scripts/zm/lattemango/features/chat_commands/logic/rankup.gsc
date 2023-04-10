@@ -27,7 +27,7 @@ rank_rankup(levels)
     rankupFee = int(levels * (sqrt(self.pers["account_rank"] * 25) / 2));
 
     // Making sure the player has the money either in the bank or in their score.
-    if (self.pers["account_bank"] < rankupFee && self.score < rankupFee)
+    if (int64_op(self.pers["account_bank"], "<", rankupFee) && int64_op(self.score, "<", rankupFee))
     {
         self thread do_player_general_vox("general", "exert_sigh", 10, 50);
         self tell("^1You don't have enough points! ^2Rank " + (self.pers["account_rank"] + levels) + "^7 requires ^1" + rankupFee + "^7 points!");
@@ -37,11 +37,11 @@ rank_rankup(levels)
     self playsoundtoplayer("zmb_vault_bank_withdraw", self);
 
     // If the player has the points to rankup, then use those, otherwise use the bank.
-    if (self.score >= rankupFee)
+    if (int64_op(self.score, ">=", rankupFee))
     {
         self.score -= rankupFee;
     }
-    else if (self.pers["account_bank"] >= rankupFee)
+    else if (int64_op(self.pers["account_bank"], ">=", rankupFee))
     {
         self.pers["account_bank"] -= rankupFee;
         self.account_value = (self.pers["account_bank"] / 1000);

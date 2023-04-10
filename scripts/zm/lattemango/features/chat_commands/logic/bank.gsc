@@ -16,17 +16,19 @@ bank_deposit(points)
 
     points = int(points);
 
-    if (points <= 0)
+    if (int64_op(points, "<=", 0))
     {
         return;
     }
-    if (self.score < points)
+
+    if (int64_op(self.score, "<", points))
     {
         self thread do_player_general_vox("general", "exert_sigh", 10, 50);
         self tell("^1You don't have enough points!");
         return;
     }
-    /*if ((self.pers["account_bank"] + points) == 1000000)
+
+    /*if (int64_op((self.pers["account_bank"] + points), "==", 1000000))
     {
         self tell("^6You^7 have reached your bank's maximum capacity!");
         return;
@@ -61,17 +63,19 @@ bank_withdraw(points)
 
     points = int(points);
 
-    if (points <= 0)
+    if (int64_op(points, "<=", 0))
     {
         return;
     }
-    if (self.pers["account_bank"] < points)
+
+    if (int64_op(self.pers["account_bank"], "<", points))
     {
         self thread do_player_general_vox("general", "exert_sigh", 10, 50);
         self tell("^1You don't have enough points!");
         return;
     }
-    if ((self.score + points) > 1000000)
+
+    if (int64_op((self.score + points), ">", 1000000))
     {
         self tell("Your score will overflow if you withdraw that much!");
         return;

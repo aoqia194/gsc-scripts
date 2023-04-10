@@ -12,7 +12,7 @@ record_display_player()
     mapname = mapname_get_fancy();
     account_record = self.pers["account_records"][mapname_get()];
     player_name = self playername_get();
-    if (account_record > 0)
+    if (int64_op(account_record, ">", 0))
     {
         say("^6" + player_name + "^7's personal record is at ^2Round " + account_record + "^7.");
     }
@@ -27,7 +27,7 @@ record_display_server()
     server_record = database_get_recorddata();
     mapname = mapname_get_fancy();
 
-    if (server_record["record"] == 0 || server_record["record_set_by"] == "")
+    if (int64_op(server_record["record"], "==", 0) || int64_op(server_record["record_set_by"], "==", ""))
     {
         say("There are no records stored for ^1" + mapname + "^7.");
     }
