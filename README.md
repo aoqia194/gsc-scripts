@@ -40,3 +40,6 @@ Here are some things on my to-do list that you might just see in the future!
 This can be achieved by possibly caching the database in `level.server_data` and accessing it from there. When the game ends, just write the cached database to the file.
 - [ ] Prevent issues with multi-server instances.
 I'm not quite sure if this will be a problem in the future. I don't have access to my own server hosting nor am I able to host multiple servers locally. This will unfortunately have to come down to issue reports if the time comes.
+
+## Mentions
+-- [Resxt](https://github.com/Resxt) for the Chat Commands base.
