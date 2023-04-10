@@ -79,7 +79,7 @@ record_update()
 
         if (level.players.size == 0)
         {
-            debug_printf("^1There needs to be at least 1 player to save the recorddata!");
+            debugprintf("^1There needs to be at least 1 player to save the recorddata!");
             return;
         }
 

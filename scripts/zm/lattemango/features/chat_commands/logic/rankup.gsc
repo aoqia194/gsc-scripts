@@ -10,7 +10,7 @@
 
 rank_update()
 {
-    debug_printf("^3Updating clantag...");
+    debugprintf("^3Updating clantag...");
     self setclantag("^5R" + self.pers["account_rank"]);
 }
 
@@ -51,7 +51,7 @@ rank_rankup(levels)
     else
     {
         // No one should realisticly be able to get here!
-        debug_printf("^1How did this even get executed????");
+        debugprintf("^1How did this even get executed????");
         return;
     }
 
@@ -77,7 +77,7 @@ on_player_connected()
 
         while (!isdefined(player.pers["account_rank"]))
         {
-            debug_printf("account_rank undefined! Waiting...");
+            debugprintf("account_rank undefined! Waiting...");
             wait 1;
         }
         

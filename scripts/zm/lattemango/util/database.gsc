@@ -45,35 +45,32 @@ create_default_recorddata()
 // The purpose of this function is to read from the json database and return it as usable data.
 database_get()
 {
-    debug_printf("^3Trying to get the database...");
+    debugprintf("^3Trying to get the database...");
 
-    path = level.server_data["path"];
-
-    file = fopen(path, "r");
+    file = fopen(level.server_data["database_path"], "r");
     json = fread(file);
     fclose(file);
 
-    debug_printf("^2Database successfully read.");
+    debugprintf("^2Database successfully read.");
     return jsonParse(json);
 }
 
 // The purpose of this function is to update the database file with the json provided.
 database_update(json)
 {
-    debug_printf("^3Trying to update the database...");
+    debugprintf("^3Trying to update the database...");
 
-    path = level.server_data["path"];
-    file = fopen(path, "w");
+    file = fopen(level.server_data["database_path"], "w");
     fwrite(file, jsonSerialize(json, 4));
     fclose(file);
 
-    debug_printf("^2Database updated.");
+    debugprintf("^2Database updated.");
 }
 
 // The point of this function is to update the player's data specifically.
 database_update_playerdata()
 {
-    debug_printf("^3Trying to update playerdata...");
+    debugprintf("^3Trying to update playerdata...");
 
     database = database_get();
 
@@ -86,13 +83,13 @@ database_update_playerdata()
     database["players"][string_tostring(self getGuid())] = player_data;
     database_update(database);
 
-    debug_printf("^2Playerdata updated.");
+    debugprintf("^2Playerdata updated.");
 }
 
 // The point of this function is to update the server's record data specifically.
 database_update_recorddata()
 {
-    debug_printf("^3Trying to update recorddata...");
+    debugprintf("^3Trying to update recorddata...");
 
     database = database_get();
 
@@ -114,7 +111,7 @@ database_update_recorddata()
     database["records"][mapname_get()] = record_data;
     database_update(database);
 
-    debug_printf("^2Recorddata updated.");
+    debugprintf("^2Recorddata updated.");
 }
 
 // The purpose of this function is to return the playerdata from the database.
@@ -132,20 +129,20 @@ database_get_recorddata()
 // The goal of database_initialise is to make sure database.json exists
 database_initialise()
 {
-    debug_printf("^3Initialising database...");
-    path = level.server_data["path"];
+    debugprintf("^3Initialising database...");
+    path = level.server_data["database_path"];
 
     if (fileExists(path))
     {
         data = string_tostring(readFile(path));
         if (!(data == "" || data == " " || data == "null" || fileSize(path) == 0))
         {
-            debug_printf("^2Database file found!");
+            debugprintf("^2Database file found!");
             return;
         }
     }
 
-    debug_printf("^3Database not found! Trying to create...");
+    debugprintf("^3Database not found! Trying to create...");
 
     // If the database doesn't exist, we retry infinitely until we can make it exist.
     while(!fileExists(path))
@@ -154,7 +151,7 @@ database_initialise()
         wait 1;
     }
 
-    debug_printf("^3Writing default JSON...");
+    debugprintf("^3Writing default JSON...");
 
     default_data = create_default_playerdata(0);
     default_data["records"] = create_default_recorddata()["records"];
@@ -164,7 +161,7 @@ database_initialise()
     fwrite(file, jsonSerialize(default_data, 4));
     fclose(file);
 
-    debug_printf("^2Database initialised.");
+    debugprintf("^2Database initialised.");
 }
 
 // The purpose of this function is to set the player entity's data from the database.
@@ -174,7 +171,7 @@ database_initialise_player()
 
     if (!isdefined(player_data))
     {
-        debug_printf("^3Playerdata not defined. Creating new playerdata...");
+        debugprintf("^3Playerdata not defined. Creating new playerdata...");
         guid = string_tostring(self getguid());
         database = database_get();
 
@@ -182,11 +179,11 @@ database_initialise_player()
         database_update(database);
         player_data = database["players"][guid];
 
-        debug_printf("^2Playerdata successfully created.");
+        debugprintf("^2Playerdata successfully created.");
     }
     else
     {
-        debug_printf("^2Playerdata found.");
+        debugprintf("^2Playerdata found.");
     }
 
     self.pers["account_bank"] = player_data["account_bank"];
@@ -197,7 +194,7 @@ database_initialise_player()
     // Set this so the player can't use their in game bank to essentially 'duplicate' their money.
     self.account_value = (self.pers["account_bank"] / 1000);
 
-    debug_printf("^2Playerdata initialised.");
+    debugprintf("^2Playerdata initialised.");
 }
 
 on_player_connected()
@@ -212,7 +209,8 @@ on_player_connected()
 
 init()
 {
-    level.server_data["path"] = "server_data/database.json";
+    level.server_data["path"] = "server_data/";
+    level.server_data["database_path"] = level.server_data["path"] + "database.json";
 
     database_initialise();
     level thread on_player_connected();
