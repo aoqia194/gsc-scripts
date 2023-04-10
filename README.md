@@ -22,4 +22,5 @@ The installation for scripts is actually **really easy**.
 6. Navigate to where you downloaded `t6-gsc-utils.dll`
 7. Drop `t6-gsc-utils.dll` into the newly created `plugins` folder.
 8. Your T6 game storage should look like this: 		![The T6 storage folder](https://i.imgur.com/F9YO59O.png)
+
 You might not have some files or folders like mine, but all that matters is you have the `plugins` and `scripts` folder. Make sure to check inside the scripts folder for my name `lattemango`. If it's in there, you can be sure that you installed it correctly!
