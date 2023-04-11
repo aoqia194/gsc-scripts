@@ -9,7 +9,7 @@ Down below I have the features I've currently developed.
  - [x] Rankup System (utilising the database)
  - [x] Discord Webhook Support
  - [x] HTTP POST Request Support (utilising my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/))
- - [X] Database Caching to prevent multiple servers accessing the database file at the same time.
+ - [X] Database Caching (to prevent multiple servers accessing the database file at the same time)
 
 ## Installation
 The installation for scripts is actually **really easy**.
