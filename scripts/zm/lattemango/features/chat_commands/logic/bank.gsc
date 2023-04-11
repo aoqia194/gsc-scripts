@@ -1,7 +1,7 @@
 // My utility classes.
 #include scripts\zm\lattemango\util\database;
-#include scripts\zm\lattemango\util\playername;
-#include scripts\zm\lattemango\util\string;
+#include scripts\zm\lattemango\util\debugprintf;
+#include scripts\zm\lattemango\util\type;
 // Used for map stats stuff.
 #include maps\mp\zombies\_zm_stats;
 // Used with vox stuff.
@@ -51,7 +51,7 @@ bank_deposit(points)
         self thread [[level.custom_bank_deposit_vo]]();
     }
 
-    say("^6" + self playername_get() + "^7 has deposited ^2$" + points);
+    say("^6" + self.pers["account_name"] + "^7 has deposited ^2$" + points);
 }
 
 bank_withdraw(points)
@@ -105,10 +105,18 @@ bank_withdraw(points)
         self thread do_player_general_vox("general", "exert_laugh", 10, 50);
     }
 
-    say("^6" + self playername_get() + "^7 has withdrawn ^2$" + points + "^7 (Fee: ^1$" + bank_fee + "^7)");
+    say("^6" + self.pers["account_name"] + "^7 has withdrawn ^2$" + points + "^7 (Fee: ^1$" + bank_fee + "^7)");
 }
 
 bank_balance()
 {
-    say("^6" + self playername_get() + "^7 has ^2$" + self.pers["account_bank"] + "^7 in their bank.");
+    playername = self.pers["account_name"];
+    account_bank = self.pers["account_bank"];
+
+    if (!isdefined(playername) || !isdefined(account_bank))
+    {
+        debugprintf("BANK", "HOW_DID_WE_GET_HERE");
+    }
+
+    say("^6" + playername + "^7 has ^2$" + account_bank + "^7 in their bank.");
 }

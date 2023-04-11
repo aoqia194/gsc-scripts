@@ -4,17 +4,35 @@
 #include scripts\zm\lattemango\util\database;
 #include scripts\zm\lattemango\util\debugprintf;
 #include scripts\zm\lattemango\util\mapname;
-#include scripts\zm\lattemango\util\playername;
-#include scripts\zm\lattemango\util\string;
+#include scripts\zm\lattemango\util\type;
 
-record_display_player()
+record_player_get()
 {
-    account_record = self.pers["account_records"][mapname_get()];
-    player_name = self playername_get();
-    
-    if (int64_op(account_record, ">", 0))
+    record = self.pers["account_records"][mapname_get()];
+
+    if (!isdefined(record))
     {
-        say("^6" + player_name + "^7's personal record is at ^2Round " + account_record + "^7.");
+        debugprintf("RECORD::PLAYER", "^1NOT_FOUND");
+        return undefined;
+    }
+
+    return record;
+}
+
+record_player_display()
+{
+    record = self record_player_get();
+    if (!isdefined(record))
+    {
+        say("^1There was an error getting the player records.");
+        return;
+    }
+
+    player_name = self.pers["account_name"];
+    
+    if (int64_op(record, ">", 0))
+    {
+        say("^6" + player_name + "^7's personal record is at ^2Round " + record + "^7.");
     }
     else
     {
@@ -22,18 +40,38 @@ record_display_player()
     }
 }
 
-record_display_server()
+record_server_get()
 {
-    server_record = database_recorddata_get();
+    database_cache_struct = database_cache_get();
+    record = database_cache_struct["records"][mapname_get()];
+
+    if (!isdefined(record))
+    {
+        debugprintf("RECORD::SERVER", "^1NOT_FOUND");
+        return undefined;
+    }
+    
+    return record;
+}
+
+record_server_display()
+{
+    record = record_server_get();
+    if (!isdefined(record))
+    {
+        say("^1There was an error getting the server records.");
+        return;
+    }
+
     mapname = mapname_get_fancy();
 
-    if (int64_op(server_record["record"], "==", 0) || int64_op(server_record["record_set_by"], "==", ""))
+    if (int64_op(record["record"], "==", 0) || int64_op(record["record_set_by"], "==", ""))
     {
         say("There are no records stored for ^1" + mapname + "^7.");
     }
     else
     {
-        say("The server's record for ^1" + mapname + "^7 is set by ^6" + server_record["record_set_by"] + "^7 at ^2Round " + server_record["record"] + "^7.");
+        say("The server's record for ^1" + mapname + "^7 is set by ^6" + record["record_set_by"] + "^7 at ^2Round " + record["record"] + "^7.");
     }
 }
 
@@ -43,20 +81,21 @@ record_update()
     {
         level waittill("end_game");
 
-        if (level.players.size == 0)
+        if (level.players.size != 0)
+        {
+            foreach (player in level.players)
+            {
+                player.pers["account_records"][mapname_get()] = level.round_number;
+                    player database_cache_playerdata_update();
+            }
+            
+            database_cache_recorddata_update();
+        }
+        else
         {
             debugprintf("RECORD", "^3NO_PLAYERS CANT_SAVE CONTINUE");
-            return;
         }
 
-        foreach (player in level.players)
-        {
-            player.pers["account_records"][mapname_get()] = level.round_number;
-            player database_cache_playerdata_update();
-        }
-
-        // Update the server's record.
-        database_cache_recorddata_update();
         level notify("record_update_done");
     }
 }
@@ -71,8 +110,23 @@ round_update()
         if (level.round_number == database_cache_recorddata_get()["record"] && level.round_number != 1)
         {
             say("You are about to beat the server record! Good luck.");
-            level thread record_display_server();
+            level thread record_server_display();
         }
+    }
+}
+
+record_player_milestone()
+{
+    record = self.pers["account_records"][mapname_get()];
+    if (record == 0)
+    {
+        return;
+    }
+
+    if (level.round_number == record && level.round_number != 1)
+    {
+        say("^6" + self.pers["account_name"] + "^7 is about to beat their personal record!");
+        self thread record_player_display();
     }
 }
 
@@ -82,13 +136,8 @@ on_player_connect()
     {
         level waittill("connected", player);
         level waittill("start_of_round");
-        player endon("disconnect");
 
-        if (level.round_number == player.pers["account_records"][mapname_get()] && level.round_number != 1)
-        {
-            say("^6" + player playername_get() + "^7 is about to beat their personal record!");
-            player thread record_display_player();
-        }
+        player thread record_player_milestone();
     }
 }
 

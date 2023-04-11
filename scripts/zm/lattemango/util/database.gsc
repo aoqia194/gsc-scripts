@@ -3,19 +3,19 @@
 // My utility classes.
 #include scripts\zm\lattemango\util\debugprintf;
 #include scripts\zm\lattemango\util\mapname;
-#include scripts\zm\lattemango\util\stats;
-#include scripts\zm\lattemango\util\string;
-#include scripts\zm\lattemango\util\struct;
+#include scripts\zm\lattemango\util\type;
+
+statstrings_account_get()
+{
+    return array("account_bank", "account_name", "account_rank", "account_records");
+}
 
 // The purpose of this function is to read from the json database and return it as usable data.
 database_get()
 {
     debugprintf("DATABASE", "^2GET");
 
-    file = fopen(level.server_data["database_path"], "r");
-    database_struct = fread(file);
-    fclose(file);
-
+    database_struct = readfile(level.server_data["database_path"]);
     return jsonParse(database_struct);
 }
 
@@ -24,9 +24,37 @@ database_set(database_struct)
 {
     debugprintf("DATABASE", "^2SET");
 
-    file = fopen(level.server_data["database_path"], "w");
-    fwrite(file, jsonserialize(database_struct, 4));
-    fclose(file);
+    writefile(level.server_data["database_path"], jsonserialize(database_struct, 4));
+}
+
+database_backup()
+{
+    backup_path = (level.server_data["path"] + "/backups");
+    database_path = level.server_data["database_path"];
+
+    if (!fileexists(database_path) || filesize(database_path) == 0)
+    {
+        debugprintf("DATABASE", "^1BACKUP DATABASE_NOT_FOUND");
+        return;
+    }
+
+    data = readfile(database_path);
+
+    if (!directoryexists(backup_path))
+    {
+        createdirectory(backup_path);
+    }
+
+    backups = listfiles(backup_path);
+    if ((backups.size + 1) > 20)
+    {
+        foreach (file in backups)
+        {
+            fremove(file);
+        }
+    }
+
+    writefile((backup_path + "/database_backup_" + (backups.size + 1) + ".json"), data);
 }
 
 database_cache_get()
@@ -58,7 +86,7 @@ database_playerdata_get()
 {
     debugprintf("DATABASE::PLAYERDATA", "^2GET");
 
-    return database_get()["players"][string_tostring(self getguid())];
+    return database_get()["players"][type_tostring(self getguid())];
 }
 
 // The point of this function is to set the player's data specifically.
@@ -69,20 +97,19 @@ database_playerdata_update()
     database = database_get();
     playerdata = database_playerdata_get();
 
-    account_stats = stats_account_get();
-    for (i = 0; i < account_stats.size; i++)
+    stats = statstrings_account_get();
+    foreach (stat in stats)
     {
-        stat = account_stats[i];
         playerdata[stat] = self.pers[stat];
     }
 
-    database["players"][string_tostring(self getGuid())] = playerdata;
+    database["players"][type_tostring(self getGuid())] = playerdata;
     database_set(database);
 }
 
 database_playerdata_new(guid)
 {
-    guid = string_tostring(guid);
+    guid = type_tostring(guid);
     playerdata = [];
 
     playerdata["players"][guid]["account_name"] = "";
@@ -90,9 +117,9 @@ database_playerdata_new(guid)
     playerdata["players"][guid]["account_rank"] = 1;
 
     account_records = mapname_get_all();
-    for (i = 0; i < account_records.size; i++)
+    foreach (map in account_records)
     {
-        playerdata["players"][guid]["account_records"][account_records[i]] = 0;
+        playerdata["players"][guid]["account_records"][map] = 0;
     }
 
     return playerdata;
@@ -103,7 +130,7 @@ database_cache_playerdata_get()
     debugprintf("DATABASE::CACHE::PLAYERDATA", "^2GET");
 
     database_cache_struct = database_cache_get();
-    return database_cache_struct["players"][string_tostring(self getguid())];
+    return database_cache_struct["players"][type_tostring(self getguid())];
 }
 
 database_cache_playerdata_update()
@@ -113,14 +140,13 @@ database_cache_playerdata_update()
     database = database_cache_get();
     playerdata = database_cache_playerdata_get();
 
-    account_stats = stats_account_get();
-    for (i = 0; i < account_stats.size; i++)
+    stats = statstrings_account_get();
+    foreach (stat in stats)
     {
-        stat = account_stats[i];
         playerdata[stat] = self.pers[stat];
     }
 
-    database["players"][string_tostring(self getGuid())] = playerdata;
+    database["players"][type_tostring(self getGuid())] = playerdata;
     database_cache_set(database);
 }
 
@@ -168,9 +194,9 @@ database_recorddata_new()
     record["record_set_by"] = "";
 
     server_records = mapname_get_all();
-    for (i = 0; i < server_records.size; i++)
+    foreach (map in server_records)
     {
-        recorddata["records"][server_records[i]] = record;
+        recorddata["records"][map] = record;
     }
     return recorddata;
 }
@@ -215,7 +241,7 @@ database_init()
 
     if (fileexists(path))
     {
-        data = string_tostring(readfile(path));
+        data = type_tostring(readfile(path));
         if (!(data == "" || data == " " || data == "null" || filesize(path) == 0))
         {
             database_cache_update();
@@ -254,7 +280,7 @@ database_initplayer()
     {
         debugprintf("DATABASE::INITPLAYER", "^3NOT_FOUND CREATING_NEW");
 
-        guid = string_tostring(self getguid());
+        guid = type_tostring(self getguid());
 
         database = database_get();
         database["players"][guid] = database_playerdata_new(guid)["players"][guid];
@@ -265,10 +291,9 @@ database_initplayer()
         debugprintf("DATABASE::INITPLAYER", "^2PLAYERDATA SUCCESS");
     }
 
-    account_stats = stats_account_get();
-    for (i = 0; i < account_stats.size; i++)
+    stats = statstrings_account_get();
+    foreach (stat in stats)
     {
-        stat = account_stats[i];
         self.pers[stat] = playerdata[stat];
     }
     self.pers["account_name"] = self.name;
@@ -281,13 +306,15 @@ database_initplayer()
 
 database_cache_initplayer()
 {
+    self endon("disconnect");
+
     playerdata = self database_cache_playerdata_get();
 
     if (!isdefined(playerdata))
     {
         debugprintf("DATABASE::CACHE::INITPLAYER", "^3NOT_FOUND CREATING_NEW");
         
-        guid = string_tostring(self getguid());
+        guid = type_tostring(self getguid());
 
         database = database_cache_get();
         database["players"][guid] = database_playerdata_new(guid)["players"][guid];
@@ -298,10 +325,9 @@ database_cache_initplayer()
         debugprintf("DATABASE::CACHE::INITPLAYER", "^2PLAYERDATA SUCCESS");
     }
 
-    account_stats = stats_account_get();
-    for (i = 0; i < account_stats.size; i++)
+    stats = statstrings_account_get();
+    foreach (stat in stats)
     {
-        stat = account_stats[i];
         self.pers[stat] = playerdata[stat];
     }
     self.pers["account_name"] = self.name;
@@ -317,8 +343,6 @@ on_player_connect()
     for (;;)
     {
         level waittill("connected", player);
-        player endon("disconnect");
-
         player thread database_cache_initplayer();
     }
 }
@@ -329,14 +353,17 @@ on_game_end()
     {
         level waittill("record_update_done");
 
-        database_set(database_cache_get());
+        database_cache_struct = database_cache_get();
+        database_set(database_cache_struct);
+
+        database_backup();
     }
 }
 
 init()
 {
-    level.server_data["path"] = "server_data/";
-    level.server_data["database_path"] = level.server_data["path"] + "database.json";
+    level.server_data["path"] = "server_data";
+    level.server_data["database_path"] = level.server_data["path"] + "/database.json";
     level.server_data["database_cache"] = [];
 
     database_init();

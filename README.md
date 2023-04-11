@@ -9,12 +9,18 @@ Down below I have the features I've currently developed.
  - [x] Rankup System (utilising the database)
  - [x] Discord Webhook Support
  - [x] HTTP POST Request Support (utilising my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/))
+ - [x] Database Caching
+ - [x] Database Backups
+
+## TODO
+ - [ ] Improve Ranking System (prestige after level 100, prestige perks like coloured names)
+ - [ ] Weapon Locker (using database)
 
 ## Installation
 The installation for scripts is actually **really easy**.
 1. Download the [source files](https://github.com/lattemango/gsc-scripts/archive/refs/heads/main.zip).
 2. Download `t6-gsc-utils.dll` from my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/releases/latest/)
-3. Find where you downloaded the source files and extract them by right-clicking the file and selecting `Extract All`
+3. Find where you downloaded the source files and extract them.
 4. Go into the folder that was just extracted and drag the scripts folder into this directory: `%localappdata%\Plutonium\storage\t6`
 5. In the folder you dragged the folder to (known as the T6 game storage), make a new folder called `plugins`.
 6. Navigate to where you downloaded `t6-gsc-utils.dll`
@@ -34,12 +40,5 @@ You might not have some files or folders like mine, but all that matters is you 
 I've tried to make this easy for people who want to edit my GSC scripts to support their own embed styles and such. So I made some helper functions and some classes that you can use to customise your POST request's JSON data without having to actually modify the JSON data yourself (which is a big pain).
 If you have a look inside [webhook_data.gsc](https://github.com/lattemango/gsc-scripts/blob/main/scripts/zm/lattemango/features/discord_webhook/webhook_data.gsc), you will be able to see how I send the requests, and how I integrate my helper functions, which ultimately get called from [chat_listener.gsc](https://github.com/lattemango/gsc-scripts/blob/main/scripts/zm/lattemango/features/discord_webhook/chat_listener.gsc).
 
-## Roadmap
-Here are some things on my to-do list that you might just see in the future!
-- [ ] Database writes only happen at the end of a match.
-This can be achieved by possibly caching the database in `level.server_data` and accessing it from there. When the game ends, just write the cached database to the file.
-- [ ] Prevent issues with multi-server instances.
-I'm not quite sure if this will be a problem in the future. I don't have access to my own server hosting nor am I able to host multiple servers locally. This will unfortunately have to come down to issue reports if the time comes.
-
 ## Mentions
-- [Resxt](https://github.com/Resxt) for the Chat Commands base.
+ - [Resxt](https://github.com/Resxt) for the Chat Commands base.

@@ -5,9 +5,7 @@
 // My logic class.
 #include scripts\zm\lattemango\features\chat_commands\logic\record;
 // My utility classes.
-#include scripts\zm\lattemango\util\debugprintf;
 #include scripts\zm\lattemango\util\error;
-#include scripts\zm\lattemango\util\struct;
 
 record_command(args)
 {
@@ -15,16 +13,16 @@ record_command(args)
     
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
-    if (!(isDefined(debug) && debug))
+    if (!isdefined(debug))
     {
-        level record_display_server();
-        self record_display_player();
+        level thread record_server_display();
+        self thread record_player_display();
         return;
     }
 
     // Command error checking.
-    error = level record_display_server();
-    error_two = self record_display_player();
+    error = level thread record_server_display();
+    error_two = self thread record_player_display();
     if (IsDefined(error)) { return error; }
     if (IsDefined(error_two)) { return error_two; }
 }

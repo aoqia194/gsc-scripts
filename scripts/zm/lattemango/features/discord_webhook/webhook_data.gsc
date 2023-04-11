@@ -16,7 +16,6 @@
 
 #include scripts\zm\lattemango\util\debugprintf;
 #include scripts\zm\lattemango\util\httppost;
-#include scripts\zm\lattemango\util\playername;
 
 webhook_command_send(message)
 {
@@ -27,7 +26,7 @@ webhook_command_send(message)
 
     data = content_set(data, "");
     data = tts_set(data, false);
-    data = embed_new(data, self playername_get(), ("Executed `" + message + "`"), undefined, undefined, 16218931, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    data = embed_new(data, self.pers["account_name"], ("Executed `" + message + "`"), undefined, undefined, 16218931, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
     request = post_data(level.server_data["discord_webhook_url"], jsonserialize(data, 0), headers);
 }
@@ -41,7 +40,7 @@ webhook_message_send(message)
 
     data = content_set(data, "");
     data = tts_set(data, false);
-    data = embed_new(data, self playername_get(), ("`" + message + "`"), undefined, undefined, 6553419, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    data = embed_new(data, self.pers["account_name"], ("`" + message + "`"), undefined, undefined, 6553419, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
     request = post_data(level.server_data["discord_webhook_url"], jsonserialize(data, 0), headers);
 }

@@ -19,6 +19,8 @@ init()
     }
     else
     {
+        writefile(file_path, "");
+
         debugprintf("WEBHOOK", "^3NOT_FOUND CONTINUE");
         return;
     }

@@ -1,8 +1,7 @@
 // My utility classes.
 #include scripts\zm\lattemango\util\database;
 #include scripts\zm\lattemango\util\debugprintf;
-#include scripts\zm\lattemango\util\playername;
-#include scripts\zm\lattemango\util\string;
+#include scripts\zm\lattemango\util\type;
 // Used for map stats stuff.
 #include maps\mp\zombies\_zm_stats;
 // Used with vox stuff.
@@ -10,6 +9,12 @@
 
 rank_update()
 {
+    while (!isdefined(self.pers["account_rank"]))
+    {
+        debugprintf("RANKUP", "^3ACCOUNT_RANK_NOT_FOUND WAIT");
+        wait 1;
+    }
+
     self setclantag("^5R" + self.pers["account_rank"]);
 }
 
@@ -59,12 +64,12 @@ rank_rankup(levels)
     self database_cache_playerdata_update();
 
     self rank_update();
-    say("^6" + self playername_get() + "^7 is now ^2Rank " + self.pers["account_rank"] + "^7 (Fee:^1 " + rankupFee + "^7)");
+    say("^6" + self.pers["account_name"] + "^7 is now ^2Rank " + self.pers["account_rank"] + "^7 (Fee:^1 " + rankupFee + "^7)");
 }
 
 rank_display()
 {
-    say("^6" + self playername_get() + "^7 is ^2Rank " + self.pers["account_rank"] + "^7.");
+    say("^6" + self.pers["account_name"] + "^7 is ^2Rank " + self.pers["account_rank"] + "^7.");
 }
 
 on_player_connect()
@@ -72,14 +77,6 @@ on_player_connect()
     for (;;)
     {
         level waittill("connected", player);
-        player endon("disconnect");
-
-        while (!isdefined(player.pers["account_rank"]))
-        {
-            debugprintf("RANKUP", "^3(ACCOUNT_RANK) NOT_FOUND WAIT");
-            wait 1;
-        }
-        
         player thread rank_update();
     }
 }

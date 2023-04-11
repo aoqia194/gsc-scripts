@@ -11,7 +11,7 @@ deposit_command(args)
 {
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
-    if (!(isdefined(debug) && debug))
+    if (!isdefined(debug))
     {
         bank_deposit(args[0]);
         return;
@@ -28,7 +28,7 @@ withdraw_command(args)
 {
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
-    if (!(isdefined(debug) && debug))
+    if (!isdefined(debug))
     {
         bank_withdraw(args[0]);
         return;
@@ -45,7 +45,7 @@ balance_command(args)
 {
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
-    if (!(isdefined(debug) && debug))
+    if (!isdefined(debug))
     {
         bank_balance();
         return;

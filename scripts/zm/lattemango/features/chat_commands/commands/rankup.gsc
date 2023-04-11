@@ -5,16 +5,13 @@
 // My logic class.
 #include scripts\zm\lattemango\features\chat_commands\logic\rankup;
 // My utility classes.
-#include scripts\zm\lattemango\util\debugprintf;
 #include scripts\zm\lattemango\util\error;
 
 rankup_command(args)
 {
-    debugprintf("DEBUG", "rankup args = " + args[0]);
-
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
-    if (!(isDefined(debug) && debug))
+    if (!isdefined(debug))
     {
         if (!isDefined(args[0]))
         {
@@ -25,10 +22,6 @@ rankup_command(args)
             rank_rankup(args[0]);
         }
         return;
-    }
-    else
-    {
-        debugprintf("DEBUG", "^5How did we get here?");
     }
 
     // Command error checking.
@@ -42,7 +35,7 @@ rank_command(args)
 {
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
-    if (!(isDefined(debug) && debug))
+    if (!isdefined(debug))
     {
         rank_display();
         return;
