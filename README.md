@@ -15,7 +15,7 @@ Down below I have the features I've currently developed.
 The installation for scripts is actually **really easy**.
 1. Download the [source files](https://github.com/lattemango/gsc-scripts/archive/refs/heads/main.zip).
 2. Download `t6-gsc-utils.dll` from my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/releases/latest/)
-3. Find where you downloaded the source files and extract them by right-clicking the file and selecting `Extract All`
+3. Find where you downloaded the source files and extract them.
 4. Go into the folder that was just extracted and drag the scripts folder into this directory: `%localappdata%\Plutonium\storage\t6`
 5. In the folder you dragged the folder to (known as the T6 game storage), make a new folder called `plugins`.
 6. Navigate to where you downloaded `t6-gsc-utils.dll`
