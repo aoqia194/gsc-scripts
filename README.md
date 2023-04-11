@@ -1,3 +1,4 @@
+
 # Welcome!
 Hello, world! I've decided to learn the GSC language for **T6**. So far, I've written a couple features; of which you will see down below in [Features](https://github.com/lattemango/gsc-scripts#features). I hope you have fun using and modifying my scripts (as you can under the [License](https://github.com/lattemango/gsc-scripts/blob/main/LICENSE)! If you have any issues or concerns using my scripts, please let me know in the [Issues](https://github.com/lattemango/gsc-scripts/issues) section!
 
@@ -9,7 +10,11 @@ Down below I have the features I've currently developed.
  - [x] Rankup System (utilising the database)
  - [x] Discord Webhook Support
  - [x] HTTP POST Request Support (utilising my [t6-gsc-utils fork](https://github.com/lattemango/t6-gsc-utils/))
- - [X] Database Caching (to prevent multiple servers accessing the database file at the same time)
+ - [x] Database Caching
+
+## TODO
+- [ ] Improve Ranking System
+- [ ] Weapon Locker (using database)
 
 ## Installation
 The installation for scripts is actually **really easy**.
