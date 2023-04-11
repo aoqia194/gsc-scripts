@@ -5,7 +5,9 @@
 // My logic class.
 #include scripts\zm\lattemango\features\chat_commands\logic\record;
 // My utility classes.
+#include scripts\zm\lattemango\util\debugprintf;
 #include scripts\zm\lattemango\util\error;
+#include scripts\zm\lattemango\util\struct;
 
 record_command(args)
 {

@@ -9,11 +9,11 @@ chat_listener()
         // If the message is a command
         if (message[0] == GetDvar("cc_prefix"))
         {
-            player thread webhook_send_command(message);
+            player thread webhook_command_send(message);
         }
         else
         {
-            player thread webhook_send_chat(message);
+            player thread webhook_message_send(message);
         }
     }
 }

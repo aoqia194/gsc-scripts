@@ -2,8 +2,6 @@
 
 init()
 {
-    debugprintf("^3Trying to get Discord webhook...");
-
     file_path = (level.server_data["path"] + "discord_webhook.json");
     if (fileExists(file_path))
     {
@@ -11,14 +9,20 @@ init()
         webhook_url = fread(file);
         fclose(file);
 
+        if (webhook_url == "")
+        {
+            debugprintf("WEBHOOK", "^3NOT_FOUND CONTINUE");
+            return;
+        }
+
         level.server_data["discord_webhook_url"] = webhook_url;
     }
     else
     {
-        debugprintf("^3Discord webhook not found. Continuing...");
+        debugprintf("WEBHOOK", "^3NOT_FOUND CONTINUE");
         return;
     }
-    debugprintf("^2Discord webhook found!");
+    debugprintf("WEBHOOK", "^2FOUND SUCCESS");
 
     scripts\zm\lattemango\features\discord_webhook\chat_listener::init();
 }

@@ -18,7 +18,7 @@
 #include scripts\zm\lattemango\util\httppost;
 #include scripts\zm\lattemango\util\playername;
 
-webhook_send_command(message)
+webhook_command_send(message)
 {
     data = [];
 
@@ -29,13 +29,11 @@ webhook_send_command(message)
     data = tts_set(data, false);
     data = embed_new(data, self playername_get(), ("Executed `" + message + "`"), undefined, undefined, 16218931, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
-    request = post_data(level.server_data["discord_webhook_url"], jsonSerialize(data, 0), headers);
+    request = post_data(level.server_data["discord_webhook_url"], jsonserialize(data, 0), headers);
 }
 
-webhook_send_chat(message)
+webhook_message_send(message)
 {
-    debugprintf("^5chat message!!!");
-
     data = [];
 
     headers = [];
@@ -45,8 +43,5 @@ webhook_send_chat(message)
     data = tts_set(data, false);
     data = embed_new(data, self playername_get(), ("`" + message + "`"), undefined, undefined, 6553419, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
 
-    debugprintf("^4data=" + jsonSerialize(data, 4));
-    debugprintf("^4headers=" + jsonSerialize(headers, 4));
-
-    request = post_data(level.server_data["discord_webhook_url"], jsonSerialize(data, 0), headers);
+    request = post_data(level.server_data["discord_webhook_url"], jsonserialize(data, 0), headers);
 }

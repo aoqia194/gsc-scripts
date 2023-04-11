@@ -10,7 +10,6 @@
 
 rank_update()
 {
-    debugprintf("^3Updating clantag...");
     self setclantag("^5R" + self.pers["account_rank"]);
 }
 
@@ -51,13 +50,13 @@ rank_rankup(levels)
     else
     {
         // No one should realisticly be able to get here!
-        debugprintf("^1How did this even get executed????");
+        debugprintf("RANKUP", "^1IMPOSSIBLE_EXECUTION");
         return;
     }
 
     // Update player rank!
     self.pers["account_rank"] += levels;
-    self database_update_playerdata();
+    self database_cache_playerdata_update();
 
     self rank_update();
     say("^6" + self playername_get() + "^7 is now ^2Rank " + self.pers["account_rank"] + "^7 (Fee:^1 " + rankupFee + "^7)");
@@ -68,16 +67,16 @@ rank_display()
     say("^6" + self playername_get() + "^7 is ^2Rank " + self.pers["account_rank"] + "^7.");
 }
 
-on_player_connected()
+on_player_connect()
 {
     for (;;)
     {
         level waittill("connected", player);
-        level endon("disconnect");
+        player endon("disconnect");
 
         while (!isdefined(player.pers["account_rank"]))
         {
-            debugprintf("account_rank undefined! Waiting...");
+            debugprintf("RANKUP", "^3(ACCOUNT_RANK) NOT_FOUND WAIT");
             wait 1;
         }
         
@@ -87,5 +86,5 @@ on_player_connected()
 
 init()
 {
-    level thread on_player_connected();
+    level thread on_player_connect();
 }

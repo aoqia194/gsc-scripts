@@ -20,7 +20,7 @@ embed_new(data, title, description, url, timestamp, colour, footer, image, thumb
 
     if (!isdefined(data))
     {
-        debugprintf("^1!!!Data wasn't defined when creating an embed. Uh-oh!!!");
+        debugprintf("DEBUG", "^1!!!Data wasn't defined when creating an embed. Uh-oh!!!");
         return;
     }
 
@@ -84,7 +84,7 @@ embed_new(data, title, description, url, timestamp, colour, footer, image, thumb
         embed["fields"] = fields;
     }
 
-    debugprintf("^3embed json=" + embed);
+    debugprintf("DEBUG", "^3embed json=" + embed);
 
     size = 0;
     if (isdefined(data["embeds"].size))
@@ -94,7 +94,7 @@ embed_new(data, title, description, url, timestamp, colour, footer, image, thumb
 
     data["embeds"][size] = embed;
 
-    debugprintf("^3data json after embed=" + data);
+    debugprintf("DEBUG", "^3data json after embed=" + data);
 
     return data;
 }

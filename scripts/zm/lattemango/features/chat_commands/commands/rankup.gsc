@@ -10,7 +10,7 @@
 
 rankup_command(args)
 {
-    debugprintf("rankup args = " + args[0]);
+    debugprintf("DEBUG", "rankup args = " + args[0]);
 
     // If we are not debugging, then don't display command hints.
     debug = level.pers["chat_command_hints"];
@@ -28,7 +28,7 @@ rankup_command(args)
     }
     else
     {
-        debugprintf("^5How did we get here?");
+        debugprintf("DEBUG", "^5How did we get here?");
     }
 
     // Command error checking.

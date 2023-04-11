@@ -9,22 +9,22 @@
 
 record_display_player()
 {
-    mapname = mapname_get_fancy();
     account_record = self.pers["account_records"][mapname_get()];
     player_name = self playername_get();
+    
     if (int64_op(account_record, ">", 0))
     {
         say("^6" + player_name + "^7's personal record is at ^2Round " + account_record + "^7.");
     }
     else
     {
-        say("^6" + player_name + "^7 has no record for ^1" + mapname + "^7.");
+        say("^6" + player_name + "^7 has no record for ^1" + mapname_get_fancy() + "^7.");
     }
 }
 
 record_display_server()
 {
-    server_record = database_get_recorddata();
+    server_record = database_recorddata_get();
     mapname = mapname_get_fancy();
 
     if (int64_op(server_record["record"], "==", 0) || int64_op(server_record["record_set_by"], "==", ""))
@@ -37,21 +37,27 @@ record_display_server()
     }
 }
 
-player_update()
+record_update()
 {
     for (;;)
     {
-        level waittill("connected", player);
-        level waittill("start_of_round");
-        level endon("disconnect");
+        level waittill("end_game");
 
-        mapname = mapname_get();
-        player_record = player.pers["account_records"][mapname];
-        if (level.round_number == player_record)
+        if (level.players.size == 0)
         {
-            say("^6" + player playername_get() + "^7 is about to beat their personal record!");
-            player thread record_display_player();
+            debugprintf("RECORD", "^3NO_PLAYERS CANT_SAVE CONTINUE");
+            return;
         }
+
+        foreach (player in level.players)
+        {
+            player.pers["account_records"][mapname_get()] = level.round_number;
+            player database_cache_playerdata_update();
+        }
+
+        // Update the server's record.
+        database_cache_recorddata_update();
+        level notify("record_update_done");
     }
 }
 
@@ -62,8 +68,7 @@ round_update()
         level waittill("start_of_round");
         level endon("end_game");
 
-        server_record = database_get_recorddata();
-        if (level.round_number == server_record["record"])
+        if (level.round_number == database_cache_recorddata_get()["record"] && level.round_number != 1)
         {
             say("You are about to beat the server record! Good luck.");
             level thread record_display_server();
@@ -71,27 +76,19 @@ round_update()
     }
 }
 
-record_update()
+on_player_connect()
 {
     for (;;)
     {
-        level waittill("end_game");
+        level waittill("connected", player);
+        level waittill("start_of_round");
+        player endon("disconnect");
 
-        if (level.players.size == 0)
+        if (level.round_number == player.pers["account_records"][mapname_get()] && level.round_number != 1)
         {
-            debugprintf("^1There needs to be at least 1 player to save the recorddata!");
-            return;
+            say("^6" + player playername_get() + "^7 is about to beat their personal record!");
+            player thread record_display_player();
         }
-
-        // Update everyone's record.
-        foreach (player in level.players)
-        {
-            player.pers["account_records"][mapname_get()] = level.round_number;
-            player database_update_playerdata();
-        }
-
-        // Update the server's record.
-        database_update_recorddata();
     }
 }
 
@@ -99,6 +96,6 @@ init()
 {
     level thread record_update();
     level thread round_update();
-    level thread player_update();
+    level thread on_player_connect();
 }
 

@@ -42,7 +42,7 @@ bank_deposit(points)
     self.pers["account_bank"] += points;
     self.account_value = (self.pers["account_bank"] / 1000);
     // Update the player's external bank data.
-    self database_update_playerdata();
+    self database_cache_playerdata_update();
     // Set the player's physical bank stats to the chat bank.
     self set_map_stat("depositBox", self.account_value);
     // Play the vox
@@ -92,7 +92,7 @@ bank_withdraw(points)
     self.score += (points - bank_fee);
     level notify("bank_withdrawal");
     // Update the player's external bank data.
-    self database_update_playerdata();
+    self database_cache_playerdata_update();
     // Set the player's physical bank stats to the chat bank.
     self set_map_stat("depositBox", self.account_value);
     // Play the vox
