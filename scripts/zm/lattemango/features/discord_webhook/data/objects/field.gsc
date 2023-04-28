@@ -1,8 +1,10 @@
+// afluffyofox
+
 // function: Creates a new field for use in embeds (see the fields array)
 // name: string
 // value: string
 // inline?: bool
-field_new(name, value, inline)
+create_field(name, value, inline)
 {
     field = [];
 

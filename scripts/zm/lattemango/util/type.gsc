@@ -1,4 +1,6 @@
-type_tostring(value)
+// afluffyofox
+
+to_string(value)
 {
     type = typeof(value);
 
@@ -12,36 +14,61 @@ type_tostring(value)
             key = keys[i];
             val = structget(value, key);
 
-            if ((key + ":" + val) != "" || typeof(key + ":" + val) != "undefined")
+            pair = (key + ":" + val);
+            if (isdefined(pair) && pair != "")
             {
-                temp += (key + ":" + val + "\n");
+                temp += pair;
+                temp += "\n";
             }
         }
 
-        ret = temp;
+        return temp;
     }
     else if (type == "array")
     {
         temp = "(";
         for (i = 0; i < value.size; i++)
         {
-            if ((i + 1) > value.size)
-            {
-                temp += value[i];
-            }
-            else
+            temp += value[i];
+
+            if (i != (value.size - 1))
             {
                 temp += value[i] + ", ";
             }
         }
         temp += ")";
 
-        ret = temp;
+        return temp;
     }
     else
     {
-        ret = (value + "");
+        return value + "";
     }
 
-    return ret;
+    return;
+}
+
+// Converts a type to a boolean based on it's value.
+to_bool(value)
+{
+    type = typeof(value);
+
+    if (type == "string")
+    {
+        return (tolower(type) == "true");
+    }
+    else if (type == "int")
+    {
+        return (type == 1);
+    }
+    else if (type == "float")
+    {
+        return (type == 1.0);
+    }
+}
+
+// Checks a string for common "bad" stuff.
+bad_string(string)
+{
+    return (string == "" || string == " " || string == "null");
 }

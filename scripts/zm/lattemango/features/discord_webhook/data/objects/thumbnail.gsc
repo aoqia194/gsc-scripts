@@ -1,9 +1,11 @@
+// afluffyofox
+
 // function: Creates a new thumbnail for use in embeds.
 // url: string
 // proxy_url?: string
 // height?: int
 // width?: int
-thumbnail_new(url, proxy_url, height, width)
+create_thumbnail(url, proxy_url, height, width)
 {
     thumbnail = [];
 

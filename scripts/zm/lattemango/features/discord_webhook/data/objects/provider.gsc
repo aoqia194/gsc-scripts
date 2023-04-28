@@ -1,7 +1,9 @@
+// afluffyofox
+
 // function: Creates a new provider for use in embeds.
 // name?: string
 // url?: string
-provider_new(name, url)
+create_provider(name, url)
 {
     provider = [];
 

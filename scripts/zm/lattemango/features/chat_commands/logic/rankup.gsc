@@ -1,24 +1,24 @@
-// My utility classes.
-#include scripts\zm\lattemango\util\database;
-#include scripts\zm\lattemango\util\debugprintf;
-#include scripts\zm\lattemango\util\type;
-// Used for map stats stuff.
+// afluffyofox
+
+#include scripts\zm\afluffyofox\util\database;
+#include scripts\zm\afluffyofox\util\debugprintf;
+#include scripts\zm\afluffyofox\util\type;
+
 #include maps\mp\zombies\_zm_stats;
-// Used with vox stuff.
 #include maps\mp\zombies\_zm_utility;
 
-rank_update()
+update_rank()
 {
     while (!isdefined(self.pers["account_rank"]))
     {
-        debugprintf("RANKUP", "^3ACCOUNT_RANK_NOT_FOUND WAIT");
+        debugprintf("^3account_rank wasn't found! Waiting...");
         wait 1;
     }
 
-    self setclantag("^5R" + self.pers["account_rank"]);
+    self setclantag("^1R" + self.pers["account_rank"]);
 }
 
-rank_rankup(levels)
+player_rankup(levels)
 {
     levels = int(levels);
 
@@ -28,7 +28,7 @@ rank_rankup(levels)
     }
 
     // You can do all kinds of math to calculate the fee for ranking up per level.
-    rankupFee = int(levels * (sqrt(self.pers["account_rank"] * 25) / 2));
+    rankupFee = int(levels * 1000);
 
     // Making sure the player has the money either in the bank or in their score.
     if (int64_op(self.pers["account_bank"], "<", rankupFee) && int64_op(self.score, "<", rankupFee))
@@ -54,30 +54,27 @@ rank_rankup(levels)
     }
     else
     {
-        // No one should realisticly be able to get here!
-        debugprintf("RANKUP", "^1IMPOSSIBLE_EXECUTION");
         return;
     }
 
-    // Update player rank!
     self.pers["account_rank"] += levels;
-    self database_cache_playerdata_update();
+    self update_playerdata_cache();
+    self update_rank();
 
-    self rank_update();
     say("^6" + self.pers["account_name"] + "^7 is now ^2Rank " + self.pers["account_rank"] + "^7 (Fee:^1 " + rankupFee + "^7)");
 }
 
-rank_display()
+display_rank()
 {
     say("^6" + self.pers["account_name"] + "^7 is ^2Rank " + self.pers["account_rank"] + "^7.");
 }
 
-on_player_connect()
+on_player_connected()
 {
     for (;;)
     {
         level waittill("connected", player);
-        player thread rank_update();
+        player thread update_rank();
     }
 }
 

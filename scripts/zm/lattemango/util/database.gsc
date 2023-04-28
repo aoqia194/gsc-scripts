@@ -1,40 +1,38 @@
-// Developed by lattemango!
+// afluffyofox
 
 // My utility classes.
-#include scripts\zm\lattemango\util\debugprintf;
-#include scripts\zm\lattemango\util\mapname;
-#include scripts\zm\lattemango\util\type;
+#include scripts\zm\afluffyofox\util\debugprintf;
+#include scripts\zm\afluffyofox\util\mapname;
+#include scripts\zm\afluffyofox\util\type;
 
-statstrings_account_get()
+get_playerdata_strings()
 {
-    return array("account_bank", "account_name", "account_rank", "account_records");
+    return array("account_access_level", "account_command_prefix", "account_bank", "account_name", "account_rank", "account_records");
 }
 
 // The purpose of this function is to read from the json database and return it as usable data.
-database_get()
+get_database()
 {
-    debugprintf("DATABASE", "^2GET");
-
     database_struct = readfile(level.server_data["database_path"]);
     return jsonParse(database_struct);
 }
 
 // The purpose of this function is to set the database file with the struct provided.
-database_set(database_struct)
+set_database(database_struct)
 {
-    debugprintf("DATABASE", "^2SET");
-
     writefile(level.server_data["database_path"], jsonserialize(database_struct, 4));
 }
 
-database_backup()
+// This is the most ghetto way of doing it.
+// If anyone has a more reasonable idea of doing backups then please tell me!
+backup_database()
 {
-    backup_path = (level.server_data["path"] + "/backups");
+    backup_path = (level.server_data["path"] + "backups/");
     database_path = level.server_data["database_path"];
 
     if (!fileexists(database_path) || filesize(database_path) == 0)
     {
-        debugprintf("DATABASE", "^1BACKUP DATABASE_NOT_FOUND");
+        debugprintf("^1Attempted to backup the database but it doesn't exist.");
         return;
     }
 
@@ -54,69 +52,61 @@ database_backup()
         }
     }
 
-    writefile((backup_path + "/database_backup_" + (backups.size + 1) + ".json"), data);
+    writefile((backup_path + "backup_database_" + (backups.size + 1) + ".json"), data);
 }
 
-database_cache_get()
+get_database_cache()
 {
-    debugprintf("DATABASE::CACHE", "^2GET");
-
     return level.server_data["database_cache"];
 }
 
 // The purpose of this function is to set the database cache with the struct provided.
-database_cache_set(database_struct)
+set_database_cache(database_struct)
 {
-    debugprintf("DATABASE::CACHE", "^2SET");
-
     level.server_data["database_cache"] = database_struct;
 }
 
 // The purpose of this function is to read from the database.json file and set the cache.
-database_cache_update()
+update_database_cache()
 {
-    debugprintf("DATABASE::CACHE", "^2UPDATE");
-
-    database_struct = database_get();
-    database_cache_set(database_struct);
+    database_struct = get_database();
+    set_database_cache(database_struct);
 }
 
 // The purpose of this function is to return the playerdata from the database.
-database_playerdata_get()
+get_playerdata()
 {
-    debugprintf("DATABASE::PLAYERDATA", "^2GET");
-
-    return database_get()["players"][type_tostring(self getguid())];
+    return get_database()["players"][to_string(self getguid())];
 }
 
 // The point of this function is to set the player's data specifically.
-database_playerdata_update()
+update_playerdata()
 {
-    debugprintf("DATABASE::PLAYERDATA", "^2SET");
+    database = get_database();
+    playerdata = get_playerdata();
 
-    database = database_get();
-    playerdata = database_playerdata_get();
-
-    stats = statstrings_account_get();
+    stats = get_playerdata_strings();
     foreach (stat in stats)
     {
         playerdata[stat] = self.pers[stat];
     }
 
-    database["players"][type_tostring(self getGuid())] = playerdata;
-    database_set(database);
+    database["players"][to_string(self getguid())] = playerdata;
+    set_database(database);
 }
 
-database_playerdata_new(guid)
+create_playerdata(guid)
 {
-    guid = type_tostring(guid);
+    guid = to_string(guid);
     playerdata = [];
 
+    playerdata["players"][guid]["account_access_level"] = 1;
+    playerdata["players"][guid]["account_command_prefix"] = "!";
     playerdata["players"][guid]["account_name"] = "";
     playerdata["players"][guid]["account_bank"] = 0;
     playerdata["players"][guid]["account_rank"] = 1;
 
-    account_records = mapname_get_all();
+    account_records = get_map_names();
     foreach (map in account_records)
     {
         playerdata["players"][guid]["account_records"][map] = 0;
@@ -125,46 +115,38 @@ database_playerdata_new(guid)
     return playerdata;
 }
 
-database_cache_playerdata_get()
+get_playerdata_cache()
 {
-    debugprintf("DATABASE::CACHE::PLAYERDATA", "^2GET");
-
-    database_cache_struct = database_cache_get();
-    return database_cache_struct["players"][type_tostring(self getguid())];
+    database_cache_struct = get_database_cache();
+    return database_cache_struct["players"][to_string(self getguid())];
 }
 
-database_cache_playerdata_update()
+update_playerdata_cache()
 {
-    debugprintf("DATABASE::CACHE::PLAYERDATA", "^2SET");
+    database = get_database_cache();
+    playerdata = get_playerdata_cache();
 
-    database = database_cache_get();
-    playerdata = database_cache_playerdata_get();
-
-    stats = statstrings_account_get();
+    stats = get_playerdata_strings();
     foreach (stat in stats)
     {
         playerdata[stat] = self.pers[stat];
     }
 
-    database["players"][type_tostring(self getGuid())] = playerdata;
-    database_cache_set(database);
+    database["players"][to_string(self getguid())] = playerdata;
+    set_database_cache(database);
 }
 
 // The purpose of this function is to return the recorddata for this map from the database.
-database_recorddata_get()
+get_recorddata()
 {
-    debugprintf("DATABASE::RECORDDATA", "^2GET");
-
-    database_struct = database_get();
-    return database_struct["records"][mapname_get()];
+    database_struct = get_database();
+    return database_struct["records"][get_map_name()];
 }
 
 // The point of this function is to update the server's record data specifically.
-database_recorddata_update()
+update_recorddata()
 {
-    debugprintf("DATABASE::RECORDDATA", "^2UPDATE");
-
-    database = database_get();
+    database = get_database();
 
     record_set_by = "";
     for (i = 0; i < level.players.size; i++)
@@ -177,15 +159,15 @@ database_recorddata_update()
         }
     }
 
-    recorddata = database_recorddata_get();
+    recorddata = get_recorddata();
     recorddata["record"] = level.round_number;
     recorddata["record_set_by"] = record_set_by;
 
-    database["records"][mapname_get()] = recorddata;
-    database_set(database);
+    database["records"][get_map_name()] = recorddata;
+    set_database(database);
 }
 
-database_recorddata_new()
+create_recorddata()
 {
     recorddata = [];
 
@@ -193,27 +175,23 @@ database_recorddata_new()
     record["record"] = 0;
     record["record_set_by"] = "";
 
-    server_records = mapname_get_all();
-    foreach (map in server_records)
+    maps = get_map_names();
+    foreach (map in maps)
     {
         recorddata["records"][map] = record;
     }
     return recorddata;
 }
 
-database_cache_recorddata_get()
+get_recorddata_cache()
 {
-    debugprintf("DATABASE::CACHE::RECORDDATA", "^2GET");
-
-    database_cache_struct = database_cache_get();
-    return database_cache_struct["records"][mapname_get()];
+    database_cache_struct = get_database_cache();
+    return database_cache_struct["records"][get_map_name()];
 }
 
-database_cache_recorddata_update()
+update_recorddata_cache()
 {
-    debugprintf("DATABASE::CACHE::RECORDDATA", "^2UPDATE");
-
-    database = database_cache_get();
+    database = get_database_cache();
 
     record_set_by = "";
     for (i = 0; i < level.players.size; i++)
@@ -226,31 +204,31 @@ database_cache_recorddata_update()
         }
     }
 
-    recorddata = database_cache_recorddata_get();
+    recorddata = get_recorddata_cache();
     recorddata["record"] = level.round_number;
     recorddata["record_set_by"] = record_set_by;
 
-    database["records"][mapname_get()] = recorddata;
-    database_cache_set(database);
+    database["records"][get_map_name()] = recorddata;
+    set_database_cache(database);
 }
 
-// The goal of database_initialise is to make sure database.json exists
-database_init()
+// The goal of this is to make sure database.json exists
+init_database()
 {
     path = level.server_data["database_path"];
 
     if (fileexists(path))
     {
-        data = type_tostring(readfile(path));
-        if (!(data == "" || data == " " || data == "null" || filesize(path) == 0))
+        data = to_string(readfile(path));
+        if (!bad_string(data) || filesize(path) != 0)
         {
-            database_cache_update();
-            debugprintf("DATABASE::INIT", "^2SUCCESS");
+            update_database_cache();
+            debugprintf("^2The database is now snug!");
             return;
         }
     }
 
-    debugprintf("DATABASE::INIT", "^3NOT_FOUND CREATING_NEW");
+    debugprintf("^3Database not found. Creating new database.");
 
     // If the database doesn't exist, we retry infinitely until we can make it exist.
     while(!fileexists(path))
@@ -259,73 +237,36 @@ database_init()
         wait 1;
     }
 
-    debugprintf("DATABASE::INIT", "^2WRITE_DEFAULTS");
-
-    defaultdata = database_playerdata_new(0);
-    defaultdata["records"] = database_recorddata_new()["records"];
+    defaultdata = create_playerdata(0);
+    defaultdata["records"] = create_recorddata()["records"];
 
     // Open the file we just created and initialise it with default JSON data.
     writefile(path, jsonserialize(defaultdata, 4));
 
-    database_cache_update();
-    debugprintf("DATABASE::INIT", "^2SUCCESS");
+    update_database_cache();
+    debugprintf("^2The database is now snug!");
 }
 
-// The purpose of this function is to init the player entity's data from the database.
-database_initplayer()
-{
-    playerdata = self database_playerdata_get();
-
-    if (!isdefined(playerdata))
-    {
-        debugprintf("DATABASE::INITPLAYER", "^3NOT_FOUND CREATING_NEW");
-
-        guid = type_tostring(self getguid());
-
-        database = database_get();
-        database["players"][guid] = database_playerdata_new(guid)["players"][guid];
-        database_set(database);
-
-        playerdata = database["players"][guid];
-
-        debugprintf("DATABASE::INITPLAYER", "^2PLAYERDATA SUCCESS");
-    }
-
-    stats = statstrings_account_get();
-    foreach (stat in stats)
-    {
-        self.pers[stat] = playerdata[stat];
-    }
-    self.pers["account_name"] = self.name;
-
-    // Set this so the player can't use their in game bank to essentially 'duplicate' their money.
-    self.account_value = (self.pers["account_bank"] / 1000);
-
-    debugprintf("DATABASE::INITPLAYER", "^2SUCCESS");
-}
-
-database_cache_initplayer()
+init_player_cache()
 {
     self endon("disconnect");
 
-    playerdata = self database_cache_playerdata_get();
+    playerdata = self get_playerdata_cache();
+    guid = to_string(self getguid());
 
     if (!isdefined(playerdata))
     {
-        debugprintf("DATABASE::CACHE::INITPLAYER", "^3NOT_FOUND CREATING_NEW");
-        
-        guid = type_tostring(self getguid());
+        debugprintf("^3Playerdata was not found. Creating new playerdata.");
 
-        database = database_cache_get();
-        database["players"][guid] = database_playerdata_new(guid)["players"][guid];
-        database_cache_set(database);
-
+        database = get_database_cache();
+        database["players"][guid] = create_playerdata(guid)["players"][guid];
+        set_database_cache(database);
         playerdata = database["players"][guid];
 
-        debugprintf("DATABASE::CACHE::INITPLAYER", "^2PLAYERDATA SUCCESS");
+        debugprintf(guid, "^2New playerdata created!");
     }
 
-    stats = statstrings_account_get();
+    stats = get_playerdata_strings();
     foreach (stat in stats)
     {
         self.pers[stat] = playerdata[stat];
@@ -335,7 +276,7 @@ database_cache_initplayer()
     // Set this so the player can't use their in game bank to essentially 'duplicate' their money.
     self.account_value = (self.pers["account_bank"] / 1000);
 
-    debugprintf("DATABASE::CACHE::INITPLAYER", "^2SUCCESS");
+    debugprintf(guid, "^2Playerdata is now snug!");
 }
 
 on_player_connect()
@@ -343,30 +284,48 @@ on_player_connect()
     for (;;)
     {
         level waittill("connected", player);
-        player thread database_cache_initplayer();
+        player thread init_player_cache();
     }
+}
+
+save_game_data()
+{
+    if (level.players.size != 0)
+    {
+        foreach (player in level.players)
+        {
+            player.pers["account_records"][get_map_name()] = level.round_number;
+            player update_playerdata_cache();
+        }
+
+        update_recorddata_cache();
+    }
+    else
+    {
+        debugprintf("^3There are no players currently playing, so we can't save any records.");
+    }
+
+    database_cache_struct = get_database_cache();
+    set_database(database_cache_struct);
+
+    backup_database();
 }
 
 on_game_end()
 {
     for (;;)
     {
-        level waittill("record_update_done");
-
-        database_cache_struct = database_cache_get();
-        database_set(database_cache_struct);
-
-        database_backup();
+        level waittill("end_game");
+        level thread save_game_data();
     }
 }
 
 init()
 {
-    level.server_data["path"] = "server_data";
-    level.server_data["database_path"] = level.server_data["path"] + "/database.json";
+    level.server_data["database_path"] = level.server_data["path"] + "database.json";
     level.server_data["database_cache"] = [];
 
-    database_init();
+    init_database();
     level thread on_player_connect();
     level thread on_game_end();
 }

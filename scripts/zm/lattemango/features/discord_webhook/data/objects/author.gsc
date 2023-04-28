@@ -1,9 +1,11 @@
+// afluffyofox
+
 // function: Creates a new author for use in embeds.
 // name: string
 // url?: string
 // icon_url?: string
 // proxy_icon_url?: string
-author_new(name, url, icon_url, proxy_icon_url)
+create_author(name, url, icon_url, proxy_icon_url)
 {
     author = [];
 

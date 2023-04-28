@@ -1,4 +1,6 @@
-#include scripts\zm\lattemango\util\debugprintf;
+// afluffyofox
+
+#include scripts\zm\afluffyofox\util\debugprintf;
 
 // function: This function allows a user to create a new embed for the webhook.
 // data: array (HTTP)
@@ -14,13 +16,13 @@
 // provider: provider object
 // author: author object
 // fields: fields object
-embed_new(data, title, description, url, timestamp, colour, footer, image, thumbnail, video, provider, author, fields)
+create_embed(data, title, description, url, timestamp, colour, footer, image, thumbnail, video, provider, author, fields)
 {
     embed = [];
 
     if (!isdefined(data))
     {
-        debugprintf("DEBUG", "^1!!!Data wasn't defined when creating an embed. Uh-oh!!!");
+        debugprintf("^1Data wasn't defined when creating an embed. Uh-oh!!!");
         return;
     }
 
@@ -84,17 +86,12 @@ embed_new(data, title, description, url, timestamp, colour, footer, image, thumb
         embed["fields"] = fields;
     }
 
-    debugprintf("DEBUG", "^3embed json=" + embed);
-
     size = 0;
     if (isdefined(data["embeds"].size))
     {
         size = data["embeds"].size + 1;
     }
-
     data["embeds"][size] = embed;
-
-    debugprintf("DEBUG", "^3data json after embed=" + data);
 
     return data;
 }

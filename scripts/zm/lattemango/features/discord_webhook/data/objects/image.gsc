@@ -1,9 +1,11 @@
+// afluffyofox
+
 // function: Creates a new image for use in embeds.
 // url: string
 // proxy_url?: string
 // height?: int
 // width?: int
-image_new(url, proxy_url, height, width)
+create_image(url, proxy_url, height, width)
 {
     image = [];
 

@@ -1,8 +1,10 @@
+// afluffyofox
+
 // function: Creates a new footer for use in embeds.
 // text: string
 // icon_url?: string
 // proxy_icon_url?: string
-footer_new(text, icon_url, proxy_icon_url)
+create_footer(text, icon_url, proxy_icon_url)
 {
     footer = [];
 

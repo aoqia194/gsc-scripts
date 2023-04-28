@@ -1,4 +1,6 @@
-mapname_get()
+// afluffyofox
+
+get_map_name()
 {
     mapname = level.script;
     gametype = level.scr_zm_ui_gametype;
@@ -12,9 +14,9 @@ mapname_get()
     return mapname + "_" + gametype;
 }
 
-mapname_get_fancy()
+get_map_name_fancy()
 {
-    mapname = mapname_get();
+    mapname = get_map_name();
     switch(mapname)
     {
         case "zm_transit_zclassic":  return "Transit";
@@ -35,7 +37,7 @@ mapname_get_fancy()
     }
 }
 
-mapname_get_all()
+get_map_names()
 {
     return array("zm_transit_zclassic", "zm_transit_zstandard", "zm_town_zstandard", "zm_town_zgrief", "zm_farm_zstandard", "zm_farm_zgrief", "zm_diner_zcleansed", "zm_prison_zclassic", "zm_prison_zgrief", "zm_nuked_zstandard", "zm_tomb_zclassic", "zm_buried_zclassic", "zm_buried_zgrief", "zm_buried_zcleansed", "zm_highrise_zclassic");
 }

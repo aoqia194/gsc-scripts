@@ -1,10 +1,10 @@
-// My utility classes.
-#include scripts\zm\lattemango\util\database;
-#include scripts\zm\lattemango\util\debugprintf;
-#include scripts\zm\lattemango\util\type;
-// Used for map stats stuff.
+// afluffyofox
+
+#include scripts\zm\afluffyofox\util\database;
+#include scripts\zm\afluffyofox\util\debugprintf;
+#include scripts\zm\afluffyofox\util\type;
+
 #include maps\mp\zombies\_zm_stats;
-// Used with vox stuff.
 #include maps\mp\zombies\_zm_utility;
 
 bank_deposit(points)
@@ -42,7 +42,7 @@ bank_deposit(points)
     self.pers["account_bank"] += points;
     self.account_value = (self.pers["account_bank"] / 1000);
     // Update the player's external bank data.
-    self database_cache_playerdata_update();
+    self update_playerdata_cache();
     // Set the player's physical bank stats to the chat bank.
     self set_map_stat("depositBox", self.account_value);
     // Play the vox
@@ -92,7 +92,7 @@ bank_withdraw(points)
     self.score += (points - bank_fee);
     level notify("bank_withdrawal");
     // Update the player's external bank data.
-    self database_cache_playerdata_update();
+    self update_playerdata_cache();
     // Set the player's physical bank stats to the chat bank.
     self set_map_stat("depositBox", self.account_value);
     // Play the vox
@@ -115,7 +115,8 @@ bank_balance()
 
     if (!isdefined(playername) || !isdefined(account_bank))
     {
-        debugprintf("BANK", "HOW_DID_WE_GET_HERE");
+        debugprintf("BANK", "^1HOW DID WE GET HERE? THIS IS CRITICAL!!!");
+        return;
     }
 
     say("^6" + playername + "^7 has ^2$" + account_bank + "^7 in their bank.");

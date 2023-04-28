@@ -1,57 +1,37 @@
-// Developed by lattemango
+// afluffyofox
 
-// Resxt's base chat commands script.
-#include scripts\chat_commands;
-// My logic class.
-#include scripts\zm\lattemango\features\chat_commands\logic\rankup;
-// My utility classes.
-#include scripts\zm\lattemango\util\error;
+#include scripts\zm\afluffyofox\features\chat_commands\logic\rankup;
+#include scripts\zm\afluffyofox\util\commands;
 
 rankup_command(args)
 {
-    // If we are not debugging, then don't display command hints.
-    debug = level.pers["chat_command_hints"];
-    if (!isdefined(debug))
+    if (args.size > 1)
     {
-        if (!isDefined(args[0]))
-        {
-            rank_rankup(1);
-        }
-        else
-        {
-            rank_rankup(args[0]);
-        }
         return;
     }
 
-    // Command error checking.
-    if (args.size > 1) { return TooManyArgsError(1); }
-    if (args.size == 0) { error = rank_rankup(1); }
-    else { error = rank_rankup(args[0]); }
-    if (IsDefined(error)) { return error; }
+    if (!isdefined(args[0]))
+    {
+        player_rankup(1);
+    }
+    else
+    {
+        player_rankup(args[0]);
+    }
 }
 
 rank_command(args)
 {
-    // If we are not debugging, then don't display command hints.
-    debug = level.pers["chat_command_hints"];
-    if (!isdefined(debug))
+    if (args.size > 0)
     {
-        rank_display();
         return;
     }
 
-    // Command error checking.
-    if (args.size > 0) { return; }
-    error = rank_display();
-    if (IsDefined(error)) { return error; }
+    display_rank();
 }
 
 init()
 {
-    // Create the chat commands here.
-    CreateCommand(level.chat_commands["ports"], "rank", "function", ::rank_command, 3);
-    CreateCommand(level.chat_commands["ports"], "r", "function", ::rank_command, 3);
-    CreateCommand(level.chat_commands["ports"], "rankup", "function", ::rankup_command, 3);
-    CreateCommand(level.chat_commands["ports"], "rup", "function", ::rankup_command, 3);
+    create_command(array("rank", "r"), ::rank_command, 1);
+    create_command("rankup", ::rankup_command, 1);
 }

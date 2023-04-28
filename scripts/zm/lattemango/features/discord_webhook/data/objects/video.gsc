@@ -1,9 +1,11 @@
+// afluffyofox
+
 // function: Creates a new video for use in embeds.
 // url?: string
 // proxy_url?: string
 // height?: int
 // width?: int
-video_new(url, proxy_url, height, width)
+create_video(url, proxy_url, height, width)
 {
     video = [];
 
