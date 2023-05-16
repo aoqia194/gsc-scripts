@@ -11,7 +11,7 @@ update_rank()
 {
     while (!isdefined(self.pers["account_rank"]))
     {
-        debugprintf("^3account_rank wasn't found! Waiting...");
+        debugprintf(undefined, "^3account_rank wasn't found! Waiting...");
         wait 1;
     }
 

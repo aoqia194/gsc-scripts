@@ -16,7 +16,8 @@ rankup_command(args)
     }
     else
     {
-        player_rankup(args[0]);
+        levels = int(args[0]);
+        player_rankup(levels);
     }
 }
 

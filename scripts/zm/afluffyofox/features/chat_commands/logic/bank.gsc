@@ -14,8 +14,6 @@ bank_deposit(points)
         points = self.score;
     }
 
-    points = int(points);
-
     if (int64_op(points, "<=", 0))
     {
         return;
@@ -60,8 +58,6 @@ bank_withdraw(points)
     {
         points = self.pers["account_bank"];
     }
-
-    points = int(points);
 
     if (int64_op(points, "<=", 0))
     {

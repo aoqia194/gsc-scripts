@@ -10,7 +10,7 @@ get_player_record()
 
     if (!isdefined(record))
     {
-        debugprintf("RECORD::PLAYER", "^1NOT_FOUND");
+        debugprintf(undefined, "^1Failed to get player record!");
         return undefined;
     }
 
@@ -45,7 +45,7 @@ get_server_record()
 
     if (!isdefined(record))
     {
-        debugprintf("RECORD::SERVER", "^1NOT_FOUND");
+        debugprintf(undefined, "^1Failed to get server record.");
         return undefined;
     }
 

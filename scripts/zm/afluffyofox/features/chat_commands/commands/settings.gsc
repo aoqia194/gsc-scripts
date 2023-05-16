@@ -8,10 +8,11 @@ set_prefix_command(args)
         return;
     }
 
-    set_prefix(args[0]);
+    prefix = (args[0] + "");
+    set_prefix(prefix);
 }
 
 init()
 {
-    create_command("setprefix", ::set_prefix_command, 1);
+    create_command(array("setprefix"), ::set_prefix_command, 1);
 }

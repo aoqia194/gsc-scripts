@@ -27,16 +27,16 @@ send_webhook(message, is_command)
 
     headers["Content-Type"] = "application/json";
 
-    data += set_content(data, "");
-    data += set_tts(data, false);
+    data = set_content(data, "");
+    data = set_tts(data, false);
 
     if (is_command)
     {
-        data += create_embed(data, self.pers["account_name"], ("Executed `" + message + "`"), undefined, undefined, 16218931, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        data = create_embed(data, self.pers["account_name"], ("Executed `" + message + "`"), undefined, undefined, 16218931, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     }
     else
     {
-        data += create_embed(data, self.pers["account_name"], ("`" + message + "`"), undefined, undefined, 6553419, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        data = create_embed(data, self.pers["account_name"], ("`" + message + "`"), undefined, undefined, 6553419, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     }
 
     send_post_request(level.server_data["discord_webhook_url"], jsonserialize(data, 0), headers);
@@ -50,7 +50,7 @@ on_player_message(message)
 
 init()
 {
-    level.server_data["discord_webhook"] = false;
+    level.server_data["discord_webhook"] = 0;
 
     file_path = (level.server_data["path"] + "discord_webhook.txt");
     if (fileexists(file_path))
@@ -61,7 +61,7 @@ init()
 
         if (bad_string(webhook_url))
         {
-            debugprintf("^3Webhook URL not found.");
+            debugprintf(undefined, "^3Webhook URL not found.");
             return;
         }
 
@@ -71,10 +71,10 @@ init()
     {
         writefile(file_path, "");
 
-        debugprintf("^3Webhook file not found.");
+        debugprintf(undefined, "^3Webhook file not found.");
         return;
     }
-    debugprintf("^2Webhook found.");
+    debugprintf(undefined, "^2Webhook found.");
 
-    level.server_data["discord_webhook"] = true;
+    level.server_data["discord_webhook"] = 1;
 }

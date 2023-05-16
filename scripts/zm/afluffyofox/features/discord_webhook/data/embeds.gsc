@@ -22,7 +22,7 @@ create_embed(data, title, description, url, timestamp, colour, footer, image, th
 
     if (!isdefined(data))
     {
-        debugprintf("^1Data wasn't defined when creating an embed. Uh-oh!!!");
+        debugprintf(undefined, "^1Data wasn't defined when creating an embed. Uh-oh!!!");
         return;
     }
 

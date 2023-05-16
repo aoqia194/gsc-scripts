@@ -2,29 +2,44 @@
 
 #include scripts\zm\afluffyofox\features\chat_commands\logic\bank;
 #include scripts\zm\afluffyofox\util\commands;
+#include scripts\zm\afluffyofox\util\debugprintf;
 
 deposit_command(args)
 {
-    if (args.size < 1 || args.size > 1)
+    if (args.size > 1)
     {
         return;
     }
 
-    bank_deposit(args[0]);
+    points = "all";
+    if (isdefined(args[0]))
+    {
+        points = int(args[0]);
+    }
+
+    bank_deposit(points);
 }
 
 withdraw_command(args)
 {
-    if (args.size < 1 || args.size > 1)
+    if (args.size > 1)
     {
         return;
     }
 
-    bank_withdraw(args[0]);
+    points = "all";
+    if (isdefined(args[0]))
+    {
+        points = int(args[0]);
+    }
+
+    bank_withdraw(points);
 }
 
 balance_command(args)
 {
+    debugprintf("balance called with args " + args);
+
     if (args.size > 0)
     {
         return;

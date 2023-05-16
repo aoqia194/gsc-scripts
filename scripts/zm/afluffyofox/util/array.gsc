@@ -1,6 +1,6 @@
 // afluffyofox
 
-array_append(array, element)
+append_array(array, element)
 {
     array[array.size] = element;
     return array;

@@ -32,7 +32,7 @@ backup_database()
 
     if (!fileexists(database_path) || filesize(database_path) == 0)
     {
-        debugprintf("^1Attempted to backup the database but it doesn't exist.");
+        debugprintf(undefined, "^1Attempted to backup the database but it doesn't exist.");
         return;
     }
 
@@ -223,12 +223,12 @@ init_database()
         if (!bad_string(data) || filesize(path) != 0)
         {
             update_database_cache();
-            debugprintf("^2The database is now snug!");
+            debugprintf(undefined, "^2The database is now snug!");
             return;
         }
     }
 
-    debugprintf("^3Database not found. Creating new database.");
+    debugprintf(undefined, "^3Database not found. Creating new database.");
 
     // If the database doesn't exist, we retry infinitely until we can make it exist.
     while(!fileexists(path))
@@ -244,7 +244,7 @@ init_database()
     writefile(path, jsonserialize(defaultdata, 4));
 
     update_database_cache();
-    debugprintf("^2The database is now snug!");
+    debugprintf(undefined, "^2The database is now snug!");
 }
 
 init_player_cache()
@@ -256,7 +256,7 @@ init_player_cache()
 
     if (!isdefined(playerdata))
     {
-        debugprintf("^3Playerdata was not found. Creating new playerdata.");
+        debugprintf(undefined, "^3Playerdata was not found. Creating new playerdata.");
 
         database = get_database_cache();
         database["players"][guid] = create_playerdata(guid)["players"][guid];
@@ -279,15 +279,6 @@ init_player_cache()
     debugprintf(guid, "^2Playerdata is now snug!");
 }
 
-on_player_connect()
-{
-    for (;;)
-    {
-        level waittill("connected", player);
-        player thread init_player_cache();
-    }
-}
-
 save_game_data()
 {
     if (level.players.size != 0)
@@ -302,7 +293,7 @@ save_game_data()
     }
     else
     {
-        debugprintf("^3There are no players currently playing, so we can't save any records.");
+        debugprintf(undefined, "^3There are no players currently playing, so we can't save any records.");
     }
 
     database_cache_struct = get_database_cache();
@@ -317,6 +308,15 @@ on_game_end()
     {
         level waittill("end_game");
         level thread save_game_data();
+    }
+}
+
+on_player_connect()
+{
+    for (;;)
+    {
+        level waittill("connected", player);
+        player thread init_player_cache();
     }
 }
 

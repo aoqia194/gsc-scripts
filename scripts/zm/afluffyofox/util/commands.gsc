@@ -1,6 +1,6 @@
+#include scripts\zm\afluffyofox\util\array;
 #include scripts\zm\afluffyofox\util\database;
 #include scripts\zm\afluffyofox\util\debugprintf;
-#include scripts\zm\afluffyofox\util\dvar;
 #include scripts\zm\afluffyofox\util\type;
 
 create_command(name, callback, access_level)
@@ -20,37 +20,33 @@ create_command(name, callback, access_level)
 
 on_player_message(message)
 {
-    if (message[0] != self.pers["account_access_level"])
+    if (message[0] != self.pers["account_command_prefix"])
     {
+        debugprintf(undefined, "^1Isn't a command.");
         return;
     }
 
-    command_array = strtok(message, " ");
-    command = level.server_data["commands"][getsubstr(command_array[0], 1)];
+    message_array = strtok(message, " ");
+    command_name = getsubstr(message_array[0], 1);
+    command_struct = level.server_data["commands"][command_name];
 
     args = [];
-    for (i = 1; i < command_array.size; i++)
+    for (i = 1; i < message_array.size; i++)
     {
-        args += command_array[i];
+        args[i - 1] = message_array[i];
     }
 
-    if (isdefined(command))
+    debugprintf(undefined, "^3Is command struct defined? " + isdefined(command_struct));
+    if (isdefined(command_struct))
     {
-        if (self.pers["account_access_level"] >= command["access_level"])
+        if (self.pers["account_access_level"] >= command_struct["access_level"])
         {
-            ret = self [[command["callback"]]](args);
-            debugprintf("^5Called function " + command["name"] + " with args " + to_string(args));
-            self tell("^2You executed a command!");
+            debugprintf(undefined, "^2Has access!");
+            ret = self [[command_struct["callback"]]](args);
         }
         else
         {
             self tell("^1You don't have access to that command.");
         }
     }
-}
-
-init()
-{
-    init_dvar("command_access_default", 1);
-    init_dvar("command_prefix_default", "!");
 }
