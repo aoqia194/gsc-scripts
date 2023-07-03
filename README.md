@@ -10,7 +10,7 @@ Down below I have the features I've currently developed.
  - [x] Rankup System (utilising the database)
  - [x] Discord Webhook Support
  - [x] Database Caching
- - [x] Database Backups
+ - [ ] Database Backups (Really fucking unstable as of current)
 
 ## TODO
  - [ ] Improve Ranking System (prestige after level 100, prestige perks like coloured names)
